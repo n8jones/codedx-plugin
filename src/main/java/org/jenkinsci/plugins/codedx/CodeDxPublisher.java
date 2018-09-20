@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -316,6 +317,9 @@ public class CodeDxPublisher extends Recorder {
 
 	protected Map<String, InputStream> gatherArtifacts(FilePath workspace,
 			PrintStream buildOutput) throws IOException, InterruptedException {
+		if (toolOutputFiles == null || toolOutputFiles.isEmpty()) {
+			return Collections.emptyMap();
+		}
 		final Map<String, InputStream> toSend =
 				new HashMap<String, InputStream>();
 
