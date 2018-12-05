@@ -1,7 +1,11 @@
 package org.jenkinsci.plugins.codedx;
 
+import hudson.PluginWrapper;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
+
+import jenkins.model.Jenkins;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -73,16 +77,24 @@ public class CodeDxBuildAction implements Action, Serializable, StaplerProxy {
 		order.add("Unspecified");
 
 		Map<String,String> iconMap = new HashMap<String,String>();
+		
+		String iconsUrl = getIconsUrl();
 
-		iconMap.put("Critical", "/plugin/codedx/icons/critical.png");
-		iconMap.put("High", "/plugin/codedx/icons/high.png");
-		iconMap.put("Medium", "/plugin/codedx/icons/medium.png");
-		iconMap.put("Low", "/plugin/codedx/icons/low.png");
-		iconMap.put("Info", "/plugin/codedx/icons/info.png");
-		iconMap.put("Unspecified", "/plugin/codedx/icons/unspecified.png");
+		iconMap.put("Critical", iconsUrl + "critical.png");
+		iconMap.put("High", iconsUrl + "high.png");
+		iconMap.put("Medium", iconsUrl + "medium.png");
+		iconMap.put("Low", iconsUrl + "low.png");
+		iconMap.put("Info", iconsUrl + "info.png");
+		iconMap.put("Unspecified", iconsUrl + "unspecified.png");
 
 		return CodeDxDiffSummary.getDiffSummary(getPreviousSeverityStats(),
 				result.getStatistics("severity"), "Severity",new DiffGroupComparator(order),iconMap);
+	}
+
+	protected String getIconsUrl() {
+		Jenkins jenkins = Jenkins.get();
+		PluginWrapper wrapper = jenkins.getPluginManager().whichPlugin(CodeDxBuildAction.class);
+		return "/plugin/" + wrapper.getShortName() + "/icons/";
 	}
 
 	/**
